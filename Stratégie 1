@@ -1,1 +1,140 @@
+# Partie 1 : Sur GOOGL 10 ans : pas risqué, LT
 
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Updated URLs with Raw file paths
+url_GM_10years = 'https://raw.githubusercontent.com/Cosima2/Project-Python/main/GM_10years.csv'
+url_GM_1year = 'https://raw.githubusercontent.com/Cosima2/Project-Python/main/GM_1year.csv'
+url_GOOGL_10years = 'https://raw.githubusercontent.com/Cosima2/Project-Python/main/GOOGL-10years.csv'
+url_GOOGL_1year = 'https://raw.githubusercontent.com/Cosima2/Project-Python/main/GOOGL_1year.csv'
+
+# Read CSV files
+data_GOOGL_10years = pd.read_csv(url_GOOGL_10years, parse_dates=['Date'], index_col='Date')
+
+# Assuming 'data' is one of the datasets loaded, replace it with the desired data for analysis
+data = data_GOOGL_10years 
+
+# Calculate Bollinger Bands
+window = 20
+data['Rolling Mean'] = data['Close'].rolling(window=window).mean()
+data['Upper Band'] = data['Rolling Mean'] + 2 * data['Close'].rolling(window=window).std()
+data['Lower Band'] = data['Rolling Mean'] - 2 * data['Close'].rolling(window=window).std()
+
+# Bollinger Bands Buy/Sell Signals
+data['Buy Signal'] = np.where(data['Close'] < data['Lower Band'].shift(1), 1, 0)
+data['Sell Signal'] = np.where(data['Close'] > data['Upper Band'].shift(1), 1, 0)
+
+# Volume Analysis
+volume_window = 5
+data['Volume MA'] = data['Volume'].rolling(window=volume_window).mean()
+# Filter data for Buy Signals
+buy_signals_data = data[data['Buy Signal'] == 1]
+
+# Check if any Buy Signals are generated
+if not buy_signals_data.empty:
+    # Calculate Cumulative Return
+    cumulative_return_strategy = (1 + buy_signals_data['Close'].pct_change()).cumprod().iloc[-1] - 1
+    print("Cumulative Return of the Strategy:", cumulative_return_strategy)
+else:
+    print("No Buy Signals generated.")
+    
+# Filter Buy and Sell Signals based on Volume
+data['Buy Signal'] = np.where((data['Buy Signal'] == 1) & (data['Volume'] > data['Volume MA']), 1, 0)
+data['Sell Signal'] = np.where((data['Sell Signal'] == 1) & (data['Volume'] > data['Volume MA']), 1, 0)
+
+# Calculate Cumulative Return
+cumulative_return_strategy = (1 + data[data['Buy Signal'] == 1]['Close'].pct_change()).cumprod().iloc[-1] - 1
+cumulative_return_stock = (1 + data['Close'].pct_change()).cumprod().iloc[-1] - 1
+
+# Calculate Sharpe Ratio
+daily_returns_strategy = data[data['Buy Signal'] == 1]['Close'].pct_change()
+daily_returns_stock = data['Close'].pct_change()
+
+sharpe_ratio_strategy = (daily_returns_strategy.mean() / daily_returns_strategy.std()) * np.sqrt(252)
+sharpe_ratio_stock = (daily_returns_stock.mean() / daily_returns_stock.std()) * np.sqrt(252)
+
+# Calculate mean return
+mean_return_strategy = daily_returns_strategy.mean()
+mean_return_stock = daily_returns_stock.mean()
+
+# Calculate variance
+variance_strategy = daily_returns_strategy.var()
+variance_stock = daily_returns_stock.var()
+
+# Filter out NaN values in both arrays and align them
+valid_dates = daily_returns_strategy.index.intersection(daily_returns_stock.index)
+daily_returns_strategy_aligned = daily_returns_strategy.loc[valid_dates]
+daily_returns_stock_aligned = daily_returns_stock.loc[valid_dates]
+
+# Calculate covariance
+covariance = np.cov(daily_returns_strategy_aligned, daily_returns_stock_aligned)[0, 1]
+
+# Calculate beta
+beta = covariance / variance_stock
+
+# Divide dataset into uptrends and downtrends
+uptrend_indices = daily_returns_strategy[daily_returns_strategy > 0].index
+downtrend_indices = daily_returns_strategy[daily_returns_strategy <= 0].index
+
+uptrend_returns_strategy = daily_returns_strategy[daily_returns_strategy.index.isin(uptrend_indices)]
+downtrend_returns_strategy = daily_returns_strategy[daily_returns_strategy.index.isin(downtrend_indices)]
+
+uptrend_returns_stock = daily_returns_stock[daily_returns_stock.index.isin(uptrend_indices)]
+downtrend_returns_stock = daily_returns_stock[daily_returns_stock.index.isin(downtrend_indices)]
+
+# Calculate beta in uptrends and downtrends
+beta_up = np.cov(uptrend_returns_strategy, uptrend_returns_stock)[0, 1] / np.var(uptrend_returns_strategy)
+beta_down = np.cov(downtrend_returns_strategy, downtrend_returns_stock)[0, 1] / np.var(downtrend_returns_strategy)
+
+# Print backtest statistics
+print("Backtest Statistics:")
+print(f"Mean Return (Stock): {mean_return_stock:.4f}")
+print(f"Mean Return (Strategy): {mean_return_strategy:.4f}")
+print(f"Cumulative Return (Stock): {cumulative_return_stock * 100:.2f}%")
+print(f"Cumulative Return (Strategy): {cumulative_return_strategy * 100:.2f}%")
+print(f"Variance (Stock): {variance_stock:.4f}")
+print(f"Variance (Strategy): {variance_strategy:.4f}")
+print(f"Beta: {beta:.4f}")
+print(f"Beta in Uptrends: {beta_up:.4f}")
+print(f"Beta in Downtrends: {beta_down:.4f}")
+print(f"Maximum Drawdown: {max_drawdown * 100:.2f}%")
+# Plotting
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8), sharex=True)
+
+# Plot Stock Price and Bollinger Bands
+ax1.plot(data['Close'], label='Close Price', linewidth=2, color='b')
+ax1.plot(data['Rolling Mean'], label=f'{window}-Day Rolling Mean', linestyle='--', linewidth=2, color='g')
+ax1.plot(data['Upper Band'], label='Upper Bollinger Band', linestyle='--', linewidth=2, color='r')
+ax1.plot(data['Lower Band'], label='Lower Bollinger Band', linestyle='--', linewidth=2, color='r')
+
+# Plot Buy signals
+ax1.plot(data[data['Buy Signal'] == 1].index,
+         data['Close'][data['Buy Signal'] == 1], '^', markersize=10, color='g', label='Buy Signal')
+
+# Plot Sell signals
+ax1.plot(data[data['Sell Signal'] == 1].index,
+         data['Close'][data['Sell Signal'] == 1], 'v', markersize=10, color='r', label='Sell Signal')
+
+ax1.set_ylabel('Stock Price')
+ax1.legend(loc='upper left')
+ax1.set_title('Stock Price with Bollinger Bands and Volume Analysis Buy/Sell Signals')
+
+# Plot Volume and Volume Moving Average
+ax2.bar(data.index, data['Volume'], color='gray', alpha=0.7, label='Volume')
+ax2.plot(data['Volume MA'], label=f'{volume_window}-Day Volume MA', color='orange', linestyle='--', linewidth=2)
+ax2.set_xlabel('Date')
+ax2.set_ylabel('Volume')
+ax2.legend(loc='upper left')
+
+plt.tight_layout()
+plt.show()
+
+# Print Cumulative Returns and Sharpe Ratios
+print(f"Cumulative Return (Stock): {cumulative_return_stock * 100:.2f}%")
+print(f"Cumulative Return (Strategy): {cumulative_return_strategy * 100:.2f}%")
+print(f"Sharpe Ratio (Stock): {sharpe_ratio_stock:.4f}")
+print(f"Sharpe Ratio (Strategy): {sharpe_ratio_strategy:.4f}")
+
+# Partie 2 : Sur GOOGL 1 an : pas risqué, CT
