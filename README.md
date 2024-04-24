@@ -28,8 +28,8 @@ Pour General Motors, si l'utilisateur choisit de ne pas prendre de risque et opt
     
 Explication :
 Cela correspond à une stratégie de Momentum qui va utiliser deux moyennes mobiles exponentielles (EMA) pour déterminer les points d'entrée et de sortie du marché. En effet nous partons de ce principe : 
-        IF YESTERDAY'S MA30 WAS LOWER THAN YESTERDAY'S MA100, AND TODAY'S MA30 IS HIGHER THAN TODAY'S MA100 THEN BUY
-        IF YESTERDAY'S MA30 WAS HIGHER THAN YESTERDAY'S MA100, AND TODAY'S MA30 IS LOWER THAN TODAY'S MA100 THEN SELL
+        if yesterday's ma30 was lower than yesterday's ma100, and today's ma30 is higher than today's ma100 then buy <br>
+        if yesterday's ma30 was higher than yesterday's ma100, and today's ma30 is lower than today's ma100 then sell
     
 # Stratégie 3 : 
     
