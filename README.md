@@ -1,9 +1,8 @@
 # Project-Python
 
 Ce code commence par présenter le profil de l'utilisateur, puis propose deux choix de stocks à investir, en demandant à l'utilisateur si son investissement peut être plus ou moins risqué, ainsi que s'il souhaite être très rentables rapidement (sur 1 an) ou rentables à long terme (sur 10 ans).
-    L'utilisateur sélectionne un stock parmi Google et General Motors.
-    L'utilisateur indique s'il souhaite prendre une position risquée ou non.
-    L'utilisateur choisit s'il veut investir à court terme (1 an) ou à long terme (10 ans).
+    L'utilisateur sélectionne un stock parmi Google et General Motors. <br>
+    Puis, il indique s'il souhaite prendre une position risquée ou non et choisit s'il veut investir à court terme (1 an) ou à long terme (10 ans).
 
 Ensuite, le code propose une stratégie d'investissement en fonction des choix de l'utilisateur, et retourne les résultats du backtest ainsi que des graphiques soit un schéma de signaux d'achat et de vente, ainsi que des résultats de la stratégie comme le rendement cumulatif, le ratio de Sharpe, le rendement moyen, la variance, le bêta, le bêta en hausse et en baisse, ainsi que le drawdown maximal. 
 
@@ -28,8 +27,8 @@ Pour General Motors, si l'utilisateur choisit de ne pas prendre de risque et opt
     
 Explication :
 Cela correspond à une stratégie de Momentum qui va utiliser deux moyennes mobiles exponentielles (EMA) pour déterminer les points d'entrée et de sortie du marché. En effet nous partons de ce principe : <br>
-    if yesterday's ma30 was lower than yesterday's ma100, and today's ma30 is higher than today's ma100 then buy <br>
-    if yesterday's ma30 was higher than yesterday's ma100, and today's ma30 is lower than today's ma100 then sell
+    Si la MA30 d'hier était inférieure à la MA100 d'hier, et que la MA30 d'aujourd'hui est supérieure à la MA100 d'aujourd'hui, alors on achète. <br>
+    Si la MA30 d'hier était supérieure à la MA100 d'hier, et que la MA30 d'aujourd'hui est inférieure à la MA100 d'aujourd'hui, alors on vend.
     
 # Stratégie 3 : 
     
