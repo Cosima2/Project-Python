@@ -1,5 +1,7 @@
 # Project-Python
 
+Ce projet a été réalisé par Cosima Icardent-Schwengbeck, Solène Jacquemin de la Touvière et Reghina Mois.
+
 Ce code commence par présenter le profil de l'utilisateur, puis propose deux choix de stocks à investir, en demandant à l'utilisateur si son investissement peut être plus ou moins risqué, ainsi que s'il souhaite être très rentables rapidement (sur 1 an) ou rentables à long terme (sur 10 ans).
     L'utilisateur sélectionne un stock parmi Google et General Motors.
     L'utilisateur indique s'il souhaite prendre une position risquée ou non.
