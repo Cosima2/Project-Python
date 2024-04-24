@@ -27,7 +27,7 @@ Les Bandes de Bollinger nous aident à voir si le prix d'une action est élevé 
 Pour General Motors, si l'utilisateur choisit de ne pas prendre de risque et opte pour un investissement à long terme, le programme utilise une stratégie basée sur les moyennes mobiles pour générer des signaux d'achat et de vente.
     
 Explication :
-Cela correspond à une stratégie de Momentum qui va utiliser deux moyennes mobiles exponentielles (EMA) pour déterminer les points d'entrée et de sortie du marché. En effet nous partons de ce principe : 
+Cela correspond à une stratégie de Momentum qui va utiliser deux moyennes mobiles exponentielles (EMA) pour déterminer les points d'entrée et de sortie du marché. En effet nous partons de ce principe : <br>
         if yesterday's ma30 was lower than yesterday's ma100, and today's ma30 is higher than today's ma100 then buy <br>
         if yesterday's ma30 was higher than yesterday's ma100, and today's ma30 is lower than today's ma100 then sell
     
