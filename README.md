@@ -7,7 +7,7 @@ Ce code commence par présenter le profil de l'utilisateur, puis propose deux ch
     L'utilisateur indique s'il souhaite prendre une position risquée ou non.
     L'utilisateur choisit s'il veut investir à court terme (1 an) ou à long terme (10 ans).
 
-La rentabilité est déduite à partir des rendements cumulés de la stratégie et nous avons étudié le risque avec le Sharpe ratio (plus la valeur du Sharpe ratio est élevé, moins la stratégie est risquée).
+La rentabilité est déduite à partir des rendements cumulés de la stratégie (ils doivent être positifs sur la durée choisie et supérieurs à ceux du stock) et nous avons qualifié le risque à travers le Sharpe ratio (plus la valeur du Sharpe ratio est élevé, moins la stratégie est risquée).
 Ensuite, le code propose une stratégie d'investissement en fonction des choix de l'utilisateur, et retourne les résultats du backtest ainsi que des graphiques soit un schéma de signaux d'achat et de vente, ainsi que des résultats de la stratégie comme le rendement cumulatif, le ratio de Sharpe, le rendement moyen, la variance, le bêta, le bêta en hausse et en baisse, ainsi que le drawdown maximal. 
 
 Enfin, le code demande à l'utilisateur s'il souhaite changer de stratégie.
